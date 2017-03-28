@@ -1,0 +1,631 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000 00000400 
+                       Stack_Size
+                               EQU              0x00000400
+    2 00000000         
+    3 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
+=3
+    4 00000000         Stack_Mem
+                               SPACE            Stack_Size
+    5 00000400         __initial_sp
+    6 00000400         Varlr   DCD              0
+    7 00000404                 ALIGN
+    8 00000404         
+    9 00000404                 PRESERVE8
+   10 00000404                 THUMB
+   11 00000404         
+   12 00000404         
+   13 00000404         ; Vector Table Mapped to Address 0 at Reset
+   14 00000404                 AREA             RESET, DATA, READONLY
+   15 00000000                 EXPORT           __Vectors
+   16 00000000                 EXPORT           __Vectors_End
+   17 00000000                 EXPORT           __Vectors_Size
+   18 00000000         
+   19 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Top of Stack
+   20 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   21 00000008 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00         SPACE            0xA8
+   22 000000B0 00000000        DCD              TIM2_Handler
+   23 000000B4         __Vectors_End
+   24 000000B4         
+   25 000000B4 000000B4 
+                       __Vectors_Size
+                               EQU              __Vectors_End - __Vectors
+   26 000000B4         
+   27 000000B4                 AREA             |.text|, CODE, READONLY
+   28 00000000         
+   29 00000000         
+   30 00000000         
+   31 00000000         ; Reset handler routine
+   32 00000000         Reset_Handler
+                               PROC
+   33 00000000                 EXPORT           Reset_Handler             [WEAK
+]
+   34 00000000                 IMPORT           OSinit
+   35 00000000         ;ldiscovery
+   36 00000000         
+   37 00000000         
+   38 00000000         
+   39 00000000         
+   40 00000000         ;Init usart
+   41 00000000         ;RCC A-port
+   42 00000000 4862            LDR              R0,=0x40023800
+   43 00000002 69C1            LDR              R1,[R0,#0x1c]
+   44 00000004 F04F 0201       LDR              R2,=0x00000001
+   45 00000008 EA41 0102       ORR              R1,R2
+   46 0000000C 61C1            STR              R1,[R0,#0x1c]
+   47 0000000E         
+   48 0000000E         ; GPIO _moder A-port
+   49 0000000E 4860            LDR              R0,=0x40020000
+   50 00000010 6801            LDR              R1,[R0,#0x00]
+   51 00000012 F44F 1220       LDR              R2,=0x00280000
+   52 00000016 EA41 0102       ORR              R1,R2
+   53 0000001A 6001            STR              R1,[R0,#0x00]
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   54 0000001C         
+   55 0000001C         ; GPIOx_AFRH
+   56 0000001C 485C            LDR              R0,=0x40020000
+   57 0000001E 6A41            LDR              R1,[R0,#0x24]
+   58 00000020 F44F 62EE       LDR              R2,=0x00000770
+   59 00000024 EA41 0102       ORR              R1,R2
+   60 00000028 6241            STR              R1,[R0,#0x24]
+   61 0000002A         
+   62 0000002A         
+   63 0000002A 4B5A            LDR              R3,=250000
+   64 0000002C 4857            LDR              R0,=0x40023800
+   65 0000002E 69C1            LDR              R1,[R0,#0x1c]
+   66 00000030 F04F 0202       LDR              R2,=0x00000002
+   67 00000034 EA41 0102       ORR              R1,R2
+   68 00000038 61C1            STR              R1,[R0,#0x1c]
+   69 0000003A         
+   70 0000003A         ;RCC_ ...EN...
+   71 0000003A 4854            LDR              R0,=0x40023800
+   72 0000003C 6A41            LDR              R1,[R0,#0x24]
+   73 0000003E F04F 0201       LDR              R2,=0x00000001
+   74 00000042 EA41 0102       ORR              R1,R2
+   75 00000046 6241            STR              R1,[R0,#0x24]
+   76 00000048         ;TIMx_CNT
+   77 00000048 F04F 4080       LDR              R0,=0x40000000
+   78 0000004C 6A41            LDR              R1,[R0,#0x24]
+   79 0000004E F04F 0200       LDR              R2,=0
+   80 00000052 EA41 0102       ORR              R1,R2
+   81 00000056 6241            STR              R1,[R0,#0x24]
+   82 00000058         ;TIMx_ARR
+   83 00000058 F04F 4080       LDR              R0,=0x40000000
+   84 0000005C 6AC1            LDR              R1,[R0,#0x2C]
+   85 0000005E F44F 727A       LDR              R2,=1000
+   86 00000062 EA41 0102       ORR              R1,R2
+   87 00000066 62C1            STR              R1,[R0,#0x2C]
+   88 00000068         ;TIMx_CR1
+   89 00000068         ;LDR R0,=0x40000000
+   90 00000068         ;LDR R1,[R0,#0x00]
+   91 00000068         ;LDR R2,=0x00000001
+   92 00000068         ;ORR R1,R2
+   93 00000068         ;STR R1,[R0,#0x00]
+   94 00000068         ;TIMx_PSC
+   95 00000068 F04F 4080       LDR              R0,=0x40000000
+   96 0000006C 6A81            LDR              R1,[R0,#0x28]
+   97 0000006E F04F 0232       LDR              R2,=50
+   98 00000072 EA41 0102       ORR              R1,R2
+   99 00000076 6281            STR              R1,[R0,#0x28]
+  100 00000078         ;TIMx_DIER
+  101 00000078 F04F 4080       LDR              R0,=0x40000000
+  102 0000007C 68C1            LDR              R1,[R0,#0x0C]
+  103 0000007E F04F 0201       LDR              R2,=0x00000001
+  104 00000082 EA41 0102       ORR              R1,R2
+  105 00000086 60C1            STR              R1,[R0,#0x0C]
+  106 00000088         ;NVIC_ISER
+  107 00000088 4843            LDR              R0,=0xE000E100
+  108 0000008A 6801            LDR              R1,[R0,#0x00]
+  109 0000008C F04F 5280       LDR              R2,=0x10000000
+  110 00000090 EA41 0102       ORR              R1,R2
+  111 00000094 6001            STR              R1,[R0,#0x00]
+  112 00000096         
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  113 00000096         ;#1 GPIO _moder
+  114 00000096 4841            LDR              R0,=0x40020400
+  115 00000098 6801            LDR              R1,[R0,#0x00]
+  116 0000009A F44F 4280       LDR              R2,=0x00004000
+  117 0000009E EA41 0102       ORR              R1,R2
+  118 000000A2 6001            STR              R1,[R0,#0x00]
+  119 000000A4         
+  120 000000A4         ;#2 GPIO _moder
+  121 000000A4 483D            LDR              R0,=0x40020400
+  122 000000A6 6801            LDR              R1,[R0,#0x00]
+  123 000000A8 F44F 5280       LDR              R2,=0x00001000
+  124 000000AC EA41 0102       ORR              R1,R2
+  125 000000B0 6001            STR              R1,[R0,#0x00]
+  126 000000B2         
+  127 000000B2 483B            LDR              R0,=OSinit
+  128 000000B4 4780            BLX              R0
+  129 000000B6         
+  130 000000B6         enable
+  131 000000B6         ;#1 GPIO _odr
+  132 000000B6         ;LDR R0,=0x40020400
+  133 000000B6         ;LDR R1,[R0,#0x14]
+  134 000000B6         ;LDR R2,=0x00000080
+  135 000000B6         ;ORR R1,R2
+  136 000000B6         ;STR R1,[R0,#0x14]
+  137 000000B6         
+  138 000000B6         ;#1 delete GPIO _odr
+  139 000000B6         ;LDR R0,=0x40020400
+  140 000000B6         ;LDR R1,[R0,#0x14]
+  141 000000B6         ;LDR R2,=~0x00000080
+  142 000000B6         ;AND R1,R2
+  143 000000B6         ;STR R1,[R0,#0x14]
+  144 000000B6         
+  145 000000B6         ;#1 GPIO _odr part 1
+  146 000000B6 4839            LDR              R0,=0x40020400
+  147 000000B8 B672            cpsid            i
+  148 000000BA 6941            LDR              R1,[R0,#0x14]
+  149 000000BC F04F 0280       LDR              R2,=0x00000080
+  150 000000C0 F104 0401 
+                       cmp1    ADD              R4,#0x00000001
+  151 000000C4 429C            CMP              R4,R3
+  152 000000C6 D1FB            BNE              cmp1
+  153 000000C8 F04F 0400       LDR              R4,=0x00000000
+  154 000000CC         
+  155 000000CC         ;#1 GPIO _odr part 2
+  156 000000CC EA81 0102       EOR              R1,R2
+  157 000000D0 6141            STR              R1,[R0,#0x14]
+  158 000000D2 B662            cpsie            i
+  159 000000D4         
+  160 000000D4 F104 0401 
+                       cmp2    ADD              R4,#0x00000001
+  161 000000D8 429C            CMP              R4,R3
+  162 000000DA D1FB            BNE              cmp2
+  163 000000DC F04F 0400       LDR              R4,=0x00000000
+  164 000000E0 E7E9            B                enable
+  165 000000E2                 ENDP
+  166 000000E2         TIM2_Handler
+                               PROC
+  167 000000E2                 IMPORT           OSkernel
+  168 000000E2         ;сохраняем LR которое меняется в OSkernel
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  169 000000E2 4670            MOV              R0, LR
+  170 000000E4 492F            LDR              R1, =Varlr
+  171 000000E6 6008            STR              R0, [r1]
+  172 000000E8 F7FF FFFE       BL               OSkernel
+  173 000000EC         ;TIMx_SR
+  174 000000EC F04F 4080       LDR              R0,=0x40000000
+  175 000000F0 6901            LDR              R1,[R0,#0x10]
+  176 000000F2 F06F 0201       LDR              R2,=~0x00000001
+  177 000000F6 EA01 0102       AND              R1,R2
+  178 000000FA 6101            STR              R1,[R0,#0x10]
+  179 000000FC         ;востанавливаем значение LR
+  180 000000FC 4929            LDR              R1, =Varlr
+  181 000000FE 6808            LDR              R0, [r1]
+  182 00000100 4686            MOV              LR, R0
+  183 00000102 4770            BX               LR
+  184 00000104                 ENDP
+  185 00000104         
+  186 00000104         SaveContext
+                               PROC
+  187 00000104                 EXPORT           SaveContext
+  188 00000104         ;Save PSW from task[i] stack to context[i] 
+  189 00000104 9909            LDR              R1,[SP,#0x24]
+  190 00000106 6401            STR              R1,[R0,#0x40]
+  191 00000108         ;Save PC from task[i] stack to context[i] 
+  192 00000108 9908            LDR              R1,[SP,#0x20]
+  193 0000010A 6341            STR              R1,[R0,#0x34]
+  194 0000010C         ;Save LR from task[i] stack to context[i]
+  195 0000010C 9907            LDR              R1,[SP,#0x1C]
+  196 0000010E 6381            STR              R1,[R0,#0x38]
+  197 00000110         ;Save R12 from task[i] stack to context[i]
+  198 00000110 9906            LDR              R1,[SP,#0x18]
+  199 00000112 6301            STR              R1,[R0,#0x30]
+  200 00000114         ;Save R3 from task[i] stack to context[i]
+  201 00000114 9905            LDR              R1,[SP,#0x14]
+  202 00000116 60C1            STR              R1,[R0,#0x0C]
+  203 00000118         ;Save R2 from task[i] stack to context[i]
+  204 00000118 9904            LDR              R1,[SP,#0x10]
+  205 0000011A 6081            STR              R1,[R0,#0x08]
+  206 0000011C         ;Save R1 from task[i] stack to context[i]
+  207 0000011C 9903            LDR              R1,[SP,#0x0c]
+  208 0000011E 6041            STR              R1,[R0,#0x04]
+  209 00000120         ;Save R0 from task[i] stack to context[i]
+  210 00000120 9902            LDR              R1,[SP,#0x08]
+  211 00000122 6001            STR              R1,[R0,#0x00]
+  212 00000124         ;Save R4 from current context to context[i]
+  213 00000124 6104            STR              R4,[R0,#0x10]
+  214 00000126         ;Save R5 from current context to context[i]
+  215 00000126 6145            STR              R5,[R0,#0x14]
+  216 00000128         ;Save R6 from current context to context[i]
+  217 00000128 6186            STR              R6,[R0,#0x18]
+  218 0000012A         ;Save R7 from current context to context[i]
+  219 0000012A 61C7            STR              R7,[R0,#0x1C]
+  220 0000012C         ;Save R8 from current context to context[i]
+  221 0000012C F8C0 8020       STR              R8,[R0,#0x20]
+  222 00000130         ;Save R9 from current context to context[i]
+  223 00000130 F8C0 9024       STR              R9,[R0,#0x24]
+  224 00000134         ;Save R10 from current context to context[i]
+  225 00000134 F8C0 A028       STR              R10,[R0,#0x28]
+  226 00000138         ;Save R11 from current context to context[i]
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  227 00000138 F8C0 B02C       STR              R11,[R0,#0x2C]
+  228 0000013C         ;Save SP from current context to context[i]
+  229 0000013C F8C0 D03C       STR              SP,[R0,#0x3C]
+  230 00000140 4770            BX               LR
+  231 00000142                 ENDP
+  232 00000142         
+  233 00000142         RestoreContext
+                               PROC
+  234 00000142                 EXPORT           RestoreContext
+  235 00000142         ;First stack item
+  236 00000142 9F00            LDR              R7,[SP,#0x00]
+  237 00000144         ;Second stack item
+  238 00000144 F8DD 8004       LDR              R8,[SP,#0x04]
+  239 00000148         
+  240 00000148         ;Restore SP
+  241 00000148 F8D0 D03C       LDR              SP,[R0,#0x3C]
+  242 0000014C         
+  243 0000014C         ;Load first value in new stack
+  244 0000014C 9700            STR              R7,[SP,#0x00]
+  245 0000014E         ;Load second value in new stack
+  246 0000014E F8CD 8004       STR              R8,[SP,#0x04]
+  247 00000152         
+  248 00000152         ;Restore R11
+  249 00000152 F8D0 B02C       LDR              R11,[R0,#0x2C]
+  250 00000156         
+  251 00000156         ;Restore R10
+  252 00000156 F8D0 A028       LDR              R10,[R0,#0x28]
+  253 0000015A         
+  254 0000015A         ;Restore R9
+  255 0000015A F8D0 9024       LDR              R9,[R0,#0x24]
+  256 0000015E         
+  257 0000015E         ;Restore R8
+  258 0000015E F8D0 8020       LDR              R8,[R0,#0x20]
+  259 00000162         
+  260 00000162         ;Restore R7
+  261 00000162 69C7            LDR              R7,[R0,#0x1C]
+  262 00000164         
+  263 00000164         ;Restore R6
+  264 00000164 6986            LDR              R6,[R0,#0x18]
+  265 00000166         
+  266 00000166         ;Restore R5
+  267 00000166 6945            LDR              R5,[R0,#0x14]
+  268 00000168         
+  269 00000168         ;Restore R4
+  270 00000168 6904            LDR              R4,[R0,#0x10]
+  271 0000016A         
+  272 0000016A         ;Restore R0
+  273 0000016A 6801            LDR              R1,[R0,#0x00]
+  274 0000016C 9102            STR              R1,[SP,#0x08]
+  275 0000016E         
+  276 0000016E         ;Restore R1
+  277 0000016E 6841            LDR              R1,[R0,#0x04]
+  278 00000170 9103            STR              R1,[SP,#0x0c]
+  279 00000172         
+  280 00000172         ;Restore R2
+  281 00000172 6881            LDR              R1,[R0,#0x08]
+  282 00000174 9104            STR              R1,[SP,#0x10]
+  283 00000176         
+  284 00000176         ;Restore R3
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  285 00000176 68C1            LDR              R1,[R0,#0x0C]
+  286 00000178 9105            STR              R1,[SP,#0x14]
+  287 0000017A         
+  288 0000017A         ;Restore R12
+  289 0000017A 6B01            LDR              R1,[R0,#0x30]
+  290 0000017C 9106            STR              R1,[SP,#0x18]
+  291 0000017E         
+  292 0000017E         ;Restore LR
+  293 0000017E 6B81            LDR              R1,[R0,#0x38]
+  294 00000180 9107            STR              R1,[SP,#0x1C]
+  295 00000182         
+  296 00000182         ;Restore PC
+  297 00000182 6B41            LDR              R1,[R0,#0x34]
+  298 00000184 9108            STR              R1,[SP,#0x20]
+  299 00000186         
+  300 00000186         ;Restore PSW
+  301 00000186 6C01            LDR              R1,[R0,#0x40]
+  302 00000188 9109            STR              R1,[SP,#0x24]
+  303 0000018A         
+  304 0000018A 4770            BX               LR
+  305 0000018C                 ENDP
+  306 0000018C         
+  307 0000018C                 ALIGN
+  308 0000018C                 END
+              40023800 
+              40020000 
+              0003D090 
+              E000E100 
+              40020400 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\startup_stm32l1xx_md.d -o.\startup_stm32l1xx_md.o -I.\RTE\_Targe
+t_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -IC:\Keil_v5\ARM\PACK\K
+eil\STM32L1xx_DFP\1.2.0\Device\Include --predefine="__EVAL SETA 1" --predefine=
+"__UVISION_VERSION SETA 523" --predefine="_RTE_ SETA 1" --predefine="STM32L152x
+C SETA 1" --list=.\startup_stm32l1xx_md.lst startup_stm32l1xx_md.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STACK 00000000
+
+Symbol: STACK
+   Definitions
+      At line 3 in file startup_stm32l1xx_md.s
+   Uses
+      None
+Comment: STACK unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 4 in file startup_stm32l1xx_md.s
+   Uses
+      None
+Comment: Stack_Mem unused
+Varlr 00000400
+
+Symbol: Varlr
+   Definitions
+      At line 6 in file startup_stm32l1xx_md.s
+   Uses
+      At line 170 in file startup_stm32l1xx_md.s
+      At line 180 in file startup_stm32l1xx_md.s
+
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 5 in file startup_stm32l1xx_md.s
+   Uses
+      At line 19 in file startup_stm32l1xx_md.s
+Comment: __initial_sp used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 14 in file startup_stm32l1xx_md.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 19 in file startup_stm32l1xx_md.s
+   Uses
+      At line 15 in file startup_stm32l1xx_md.s
+      At line 25 in file startup_stm32l1xx_md.s
+
+__Vectors_End 000000B4
+
+Symbol: __Vectors_End
+   Definitions
+      At line 23 in file startup_stm32l1xx_md.s
+   Uses
+      At line 16 in file startup_stm32l1xx_md.s
+      At line 25 in file startup_stm32l1xx_md.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 27 in file startup_stm32l1xx_md.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 32 in file startup_stm32l1xx_md.s
+   Uses
+      At line 20 in file startup_stm32l1xx_md.s
+      At line 33 in file startup_stm32l1xx_md.s
+
+RestoreContext 00000142
+
+Symbol: RestoreContext
+   Definitions
+      At line 233 in file startup_stm32l1xx_md.s
+   Uses
+      At line 234 in file startup_stm32l1xx_md.s
+Comment: RestoreContext used once
+SaveContext 00000104
+
+Symbol: SaveContext
+   Definitions
+      At line 186 in file startup_stm32l1xx_md.s
+   Uses
+      At line 187 in file startup_stm32l1xx_md.s
+Comment: SaveContext used once
+TIM2_Handler 000000E2
+
+Symbol: TIM2_Handler
+   Definitions
+      At line 166 in file startup_stm32l1xx_md.s
+   Uses
+      At line 22 in file startup_stm32l1xx_md.s
+Comment: TIM2_Handler used once
+cmp1 000000C0
+
+Symbol: cmp1
+   Definitions
+      At line 150 in file startup_stm32l1xx_md.s
+   Uses
+      At line 152 in file startup_stm32l1xx_md.s
+Comment: cmp1 used once
+cmp2 000000D4
+
+Symbol: cmp2
+   Definitions
+      At line 160 in file startup_stm32l1xx_md.s
+   Uses
+      At line 162 in file startup_stm32l1xx_md.s
+Comment: cmp2 used once
+enable 000000B6
+
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: enable
+   Definitions
+      At line 130 in file startup_stm32l1xx_md.s
+   Uses
+      At line 164 in file startup_stm32l1xx_md.s
+Comment: enable used once
+8 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Stack_Size 00000400
+
+Symbol: Stack_Size
+   Definitions
+      At line 1 in file startup_stm32l1xx_md.s
+   Uses
+      At line 4 in file startup_stm32l1xx_md.s
+Comment: Stack_Size used once
+__Vectors_Size 000000B4
+
+Symbol: __Vectors_Size
+   Definitions
+      At line 25 in file startup_stm32l1xx_md.s
+   Uses
+      At line 17 in file startup_stm32l1xx_md.s
+Comment: __Vectors_Size used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+OSinit 00000000
+
+Symbol: OSinit
+   Definitions
+      At line 34 in file startup_stm32l1xx_md.s
+   Uses
+      At line 127 in file startup_stm32l1xx_md.s
+Comment: OSinit used once
+OSkernel 00000000
+
+Symbol: OSkernel
+   Definitions
+      At line 167 in file startup_stm32l1xx_md.s
+   Uses
+      At line 172 in file startup_stm32l1xx_md.s
+Comment: OSkernel used once
+2 symbols
+355 symbols in table

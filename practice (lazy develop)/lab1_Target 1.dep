@@ -1,0 +1,18 @@
+Dependencies for Project 'lab1', Target 'Target 1': (DO NOT MODIFY !)
+F (.\startup_stm32l1xx_md.s)(0x58DA3A68)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork -I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include--pd "__UVISION_VERSION SETA 523" --pd "_RTE_ SETA 1" --pd "STM32L152xC SETA 1"--list .\startup_stm32l1xx_md.lst --xref -o .\startup_stm32l1xx_md.o --depend .\startup_stm32l1xx_md.d)
+F (.\lab2.c)(0x58DA4645)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork -I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32L152xC-o .\lab2.o --omf_browse .\lab2.crf --depend .\lab2.d)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\stm32l1xx.h)(0x57E0FE50)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\stm32l152xc.h)(0x57E0FE50)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm3.h)(0x589881CA)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F63EF8)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_compiler.h)(0x589881CA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_armcc.h)(0x589881CA)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\system_stm32l1xx.h)(0x57E0FE50)
+F (.\WinOS.c)(0x58DA43E1)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O0 --apcs=interwork -I.\RTE\_Target_1-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include-D__UVISION_VERSION="523" -D_RTE_ -DSTM32L152xC-o .\winos.o --omf_browse .\winos.crf --depend .\winos.d)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\stm32l1xx.h)(0x57E0FE50)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\stm32l152xc.h)(0x57E0FE50)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\core_cm3.h)(0x589881CA)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F63EF8)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_compiler.h)(0x589881CA)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include\cmsis_armcc.h)(0x589881CA)
+I (C:\Keil_v5\ARM\PACK\Keil\STM32L1xx_DFP\1.2.0\Device\Include\system_stm32l1xx.h)(0x57E0FE50)
